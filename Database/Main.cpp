@@ -97,6 +97,7 @@ public:
     }
 
     void insertIntoTable(){
+        /*
         cout<<"Enter number of records: ";
         cin>>numberOfRecords;
         cin.ignore();
@@ -106,6 +107,15 @@ public:
                 cin.getline(field[j].value[i],sizeof(field[j].value[i])/sizeof(char));
             }
         }
+        */
+        cin.ignore();
+        for(int i=numberOfRecords;i<numberOfRecords+1;i++){
+            for(int j=0;j<numberOfField;j++){
+                cout<<"\tEnter "<<field[j].columnName<<": ";
+                cin.getline(field[j].value[i],sizeof(field[j].value[i])/sizeof(char));
+            }
+        }
+        numberOfRecords++;
     }
 
     void selectAll(){
