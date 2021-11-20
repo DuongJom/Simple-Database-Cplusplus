@@ -1,2 +1,0 @@
-C:\Users\ASUS\Downloads\Database\Debug\Database.exe
-D:\Github\Simple-Database-Cplusplus\Database\Debug\Database.exe
