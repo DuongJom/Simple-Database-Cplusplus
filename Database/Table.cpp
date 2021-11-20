@@ -10,6 +10,7 @@ public:
 	int numberOfField;
 	Field fields[MAX];
 	char primaryKey[50];
+	int numberOfRecords;
 
 	Table() {}
 
@@ -84,6 +85,27 @@ public:
 				}
 				cout << "\n)\n";
 			}
+		}
+	}
+
+	void insert() {
+		cout << "Enter number of records: ";
+		cin >> numberOfRecords;
+
+		for (int i = 0; i < numberOfRecords; i++) {
+			for (int j = 0; j < numberOfField; j++) {
+				cout << "\tEnter " << fields[j].columnName << ": ";
+				cin.getline(fields[j].value[i], 50);
+			}
+		}
+	}
+
+	void selectAll() {
+		for (int i = 0; i < numberOfRecords; i++) {
+			for (int j = 0; j < numberOfField; j++) {
+				printf("|%20s", fields[j].value[i]);
+			}
+			cout << "|" << endl;
 		}
 	}
 };

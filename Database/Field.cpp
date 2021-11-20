@@ -8,6 +8,7 @@ public:
 	char columnName[50];
 	char dataType[50];
 	bool isNull;
+	char* value[MAX];
 
 	Field() {}
 
