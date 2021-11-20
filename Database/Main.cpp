@@ -97,17 +97,6 @@ public:
     }
 
     void insertIntoTable(){
-        /*
-        cout<<"Enter number of records: ";
-        cin>>numberOfRecords;
-        cin.ignore();
-        for(int i=0;i<numberOfRecords;i++){
-            for(int j=0;j<numberOfField;j++){
-                cout<<"\tEnter "<<field[j].columnName<<": ";
-                cin.getline(field[j].value[i],sizeof(field[j].value[i])/sizeof(char));
-            }
-        }
-        */
         cin.ignore();
         for(int i=numberOfRecords;i<numberOfRecords+1;i++){
             for(int j=0;j<numberOfField;j++){
@@ -135,16 +124,29 @@ public:
             printf("%s","+");
         }
         cout<<endl;
-        for(int i=0;i<numberOfRecords;i++){
-            for(int j=0;j<numberOfField;j++){
-                if(j<numberOfField-1){
-                    printf("|%-21s",field[j].value[i]);
-                }
-                else{
-                    printf("|%-21s|\n",field[j].value[i]);
+        if(numberOfRecords!=0){
+            for(int i=0;i<numberOfRecords;i++){
+                for(int j=0;j<numberOfField;j++){
+                    if(j<numberOfField-1){
+                        printf("|%-21s",field[j].value[i]);
+                    }
+                    else{
+                        printf("|%-21s|\n",field[j].value[i]);
+                    }
                 }
             }
         }
+        else{
+            for(int i=0;i<numberOfField;i++){
+                if(i<numberOfField-1){
+                    printf("|%-21s"," ");
+                }
+                else{
+                    printf("|%-21s|\n"," ");
+                }
+            }
+        }
+
         for(int i=1;i<=21*numberOfField+(numberOfField+1);i++){
             printf("%s","+");
         }
