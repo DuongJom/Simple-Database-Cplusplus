@@ -36,6 +36,40 @@ class Field{
 
 };
 
+class FilterRecord{
+public:
+    int numberOfFilter;
+    char filterCol[50][50];
+    char filterValue[50][50];
+
+    FilterRecord(){
+        numberOfFilter=0;
+    }
+
+    void inputFilter(){
+        cout<<"Enter number of filter column: ";
+        cin>>numberOfFilter;
+        cin.ignore();
+        for(int i=0;i<numberOfFilter;i++){
+            if(i==0){
+                cout<<"\tEnter the 1st filter column name: ";
+            }
+            else{
+                cout<<"\tEnter the "<<i+1<<"th filter column name: ";
+            }
+            cin>>filterCol[i];
+            cin.ignore();
+            if(i==0){
+                cout<<"\tEnter the 1st filter column value: ";
+            }
+            else{
+                cout<<"\tEnter the "<<i+1<<"th filter column value: ";
+            }
+            cin.getline(filterValue[i],sizeof(filterValue[i])/sizeof(char));
+        }
+    }
+};
+
 class Table{
 public:
     char tableName[20];
@@ -70,40 +104,29 @@ public:
     }
 
     void showTable(){
-        cout<<tableName<<endl<<"("<<endl;
+        cout<<"Table name: "<<tableName<<endl;
+        printf("+---------------+--------------------+---------------+-----------+\n");
+        printf("|%-15s|%-20s|%-15s|%-11s|\n","Primary Key","Column name","Data type","Allow Null");
+        printf("+---------------+--------------------+---------------+-----------+\n");
         for(int i=0;i<numberOfField;i++){
-            if(i<numberOfField-1){
-                if(strcmp(field[i].columnName,primaryKey)==0){
-                    field[i].showField();
-                    cout<<"PRIMARY KEY,"<<endl;
-                }
-                else{
-                    field[i].showField();
-                    cout<<","<<endl;
-                }
+            if(strcmp(field[i].columnName,primaryKey)==0){
+                printf("|%8s%7s|%-20s|%-15s|%6s%5s|\n","PK"," ",field[i].columnName,field[i].dataType,field[i].isNull==0?"N":"Y"," ");
             }
             else{
-                if(strcmp(field[i].columnName,primaryKey)==0){
-                    field[i].showField();
-                    cout<<"PRIMARY KEY"<<endl;
-                }
-                else{
-                    field[i].showField();
-                    cout<<endl;
-                }
+                printf("|%8s%7s|%-20s|%-15s|%6s%5s|\n","-"," ",field[i].columnName,field[i].dataType,field[i].isNull==0?"N":"Y"," ");
             }
         }
-        cout<<")"<<endl;
+        printf("+---------------+--------------------+---------------+-----------+\n");
     }
 
     void insertIntoTable(){
-        cin.ignore();
         for(int i=numberOfRecords;i<numberOfRecords+1;i++){
             for(int j=0;j<numberOfField;j++){
                 cout<<"\tEnter "<<field[j].columnName<<": ";
                 cin.getline(field[j].value[i],sizeof(field[j].value[i])/sizeof(char));
             }
         }
+        cout<<endl;
         numberOfRecords++;
     }
 
@@ -151,6 +174,83 @@ public:
             printf("%s","+");
         }
         cout<<endl;
+    }
+
+    void selectAny(){
+        int nSelectedColumn;
+        char xSelectedColumn[50][50];
+        char xFilterColumn[50];
+        char xValueFilter[50];
+
+        cout<<"Enter number of selected column: ";
+        cin>>nSelectedColumn;
+        cin.ignore();
+        for(int i=0;i<nSelectedColumn;i++){
+            if(i==0){
+                cout<<"\tEnter the 1st selected column name: ";
+            }
+            else{
+                cout<<"\tEnter the"<<i+1<<"th selected column name: ";
+            }
+            cin>>xSelectedColumn[i];
+        }
+
+        cout<<"Enter filter column: ";
+        cin>>xFilterColumn;
+        cin.ignore();
+        cout<<"Enter filter value: ";
+        cin.getline(xValueFilter,sizeof(xValueFilter)/sizeof(char));
+
+        cout<<"Executing query:"<<endl;
+        cout<<"\tSELECT ";
+        for(int i=0;i<nSelectedColumn;i++){
+            if(i<nSelectedColumn-1){
+                cout<<xSelectedColumn[i]<<", ";
+            }
+            else{
+                cout<<xSelectedColumn[i]<<endl;
+            }
+        }
+        cout<<"\tFROM "<<tableName<<endl;
+        cout<<"\tWHERE "<<xFilterColumn<<" = '"<<xValueFilter<<"'"<<endl;
+
+        int index = selectedIndex(xFilterColumn,xValueFilter);
+
+        for(int i=1;i<=21*nSelectedColumn+(nSelectedColumn+1);i++){
+            printf("%s","+");
+        }
+        cout<<endl;
+        for(int i=0;i<nSelectedColumn;i++){
+            if(i<nSelectedColumn-1){
+                printf("|%-21s",xSelectedColumn[i]);
+            }
+            else{
+                printf("|%-21s|\n",xSelectedColumn[i]);
+            }
+        }
+        for(int i=1;i<=21*nSelectedColumn+(nSelectedColumn+1);i++){
+            printf("%s","+");
+        }
+        cout<<endl;
+        for(int i=0;i<numberOfRecords;i++){
+            if(i==index){
+                printf("|");
+                for(int j=0;j<nSelectedColumn;j++){
+                    for(int k=0;k<numberOfField;k++){
+                        if(strcmp(field[k].columnName,xSelectedColumn[j])==0){
+                            printf("%-21s|",field[k].value[i]);
+                        }
+                    }
+                }
+                printf("\n");
+            }
+        }
+
+        for(int i=1;i<=21*nSelectedColumn+(nSelectedColumn+1);i++){
+            printf("%s","+");
+        }
+        cout<<endl;
+        cout<<"Complete successfully!";
     }
 
     int selectedIndex(char column[], char condition[]){
@@ -264,17 +364,28 @@ public:
         }
         cout<<"Complete successfully!"<<endl;
     }
+
+
 };
 
 int main()
 {
     Table table;
+    int numberOfRecords;
     cout<<"---------------------------------INPUT TABLE-------------------------------"<<endl;
     table.inputTable();
     cout<<"\n---------------------------------SHOW TABLE-------------------------------"<<endl;
     table.showTable();
     cout<<"\n----------------------------INSERT DATA INTO TABLE------------------------"<<endl;
-    table.insertIntoTable();
+    cout<<"Enter number of records: ";
+    cin>>numberOfRecords;
+    cin.ignore();
+    for(int i=0;i<numberOfRecords;i++){
+        table.insertIntoTable();
+    }
+    cout<<"\n----------------------------SELECT DATA IN TABLE--------------------------"<<endl;
+    table.selectAny();
+    /*
     cout<<"\n----------------------------DELETE DATA IN TABLE--------------------------"<<endl;
     table.deleteWithCondition();
     cout<<"\n----------------------------SELECT DATA IN TABLE--------------------------"<<endl;
@@ -295,5 +406,6 @@ int main()
     table.deleteAllData();
     cout<<"\n----------------------------SELECT DATA IN TABLE--------------------------"<<endl;
     table.selectAll();
+    */
     return 0;
 }
