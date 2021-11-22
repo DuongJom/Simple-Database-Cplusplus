@@ -1,5 +1,0 @@
-# depslib dependency file v1.0
-1637468405 source:d:\github\simple-database-cplusplus\database\main.cpp
-	<iostream>
-	<string.h>
-
